@@ -26,7 +26,8 @@ public class MainActivity extends AppCompatActivity {
     private static final int CAMERA_REQUEST_CODE = 5000;
     private static final String SAVED_FILE = "myfile";
     private File file;
-    private ImageView imageView;
+    private AspectImageView imageView;
+    private AspectImageView scrimView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +37,8 @@ public class MainActivity extends AppCompatActivity {
         }
         setContentView(R.layout.activity_main);
         Button button = (Button) findViewById(R.id.button);
-        imageView = (ImageView) findViewById(R.id.image);
+        imageView = (AspectImageView) findViewById(R.id.image);
+        scrimView = (AspectImageView) findViewById(R.id.scrim);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         });
         if (file != null) {
             imageView.setImageBitmap(BitmapFactory.decodeFile(file.getAbsolutePath()));
+            scrimView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -88,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
-
                     }
                 });
         builder.create().show();
@@ -116,12 +118,14 @@ public class MainActivity extends AppCompatActivity {
             if (requestCode == PICTURE_REQUEST) {
                 Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
                 imageView.setImageBitmap(bitmap);
+                scrimView.setVisibility(View.VISIBLE);
             }
         }
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void
+    onSaveInstanceState(Bundle outState) {
         outState.putSerializable(SAVED_FILE, file);
         super.onSaveInstanceState(outState);
     }
